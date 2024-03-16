@@ -1,0 +1,96 @@
+\subsection{Partie jeu\_partie(jeu\_partie.py)}
+	Nous voilà maintenant dans la section de jeu. Nous verrons dans cette partie 3 fonctions qui permettent de jouer le jeu de "La réussite des alliances". On a:\emph{reussite\_mode\_auto}, \emph{reussite\_mode\_manuel} et \emph{lance\_resussite}, cette dernière permet juste au joueur de choisir le mode manuel ou mode automatique du jeu.
+	\par Ces fonctions sont la synthèse de toutes les fonctions vues précédemment, c'est la finalité du programme. Elles interagissent directement avec le joueur via le terminal, en lui affichant quelques instructions afin de poursuivre le jeu. Voyons donc cela dans les aperçus du code.
+	\\
+	\begin{itemize}
+	\color{blue}\item[•]Aperçu du code mode\_auto:
+	\end{itemize}
+	
+	\lstset{language=Python}
+	\lstset{frame=lines}
+	\lstset{label={lst:code_direct}}
+	\lstset{basicstyle=\footnotesize}
+	\begin{lstlisting}
+def reussite_mode_auto(pioche, affiche=False): #PIOCHE: LISTE JEU MELANGE
+    pi = list(pioche) #PI: PIOCHE
+    affiche_liste(pioche, affiche)
+    jeu_init = []
+    i = 0
+    while(i<3):
+        jeu_init.append(pi[0])
+        pi.pop(0)
+        affiche_liste(jeu_init, affiche)
+        i += 1
+
+    saut_si_possible(jeu_init, 1) #CARTE DU MILIEU INDEX
+
+    j=0
+    num_cartes_pioche = len(pi)
+    while(j<num_cartes_pioche):
+        une_etape_reussite(jeu_init, pi, affiche)
+        j += 1
+    
+    return jeu_init
+	\end{lstlisting}
+
+	\begin{itemize}
+	\color{blue}\item[•]Aperçu du code mode\_manuel:
+	\end{itemize}
+	
+	\lstset{language=Python}
+	\lstset{frame=lines}
+	\lstset{label={lst:code_direct}}
+	\lstset{basicstyle=\footnotesize}
+	\begin{lstlisting}
+def reussite_mode_manuel(pioche, nb_tas_max=2):
+    success = False
+    pi = list(pioche)
+    jeu = []
+    pioche_liste(jeu, pi)
+
+    while(success == False):
+        os.system('clear')
+        afficher_reussite(jeu)
+        rep = input("(s)aut/(p)ioche/(e)xit: ")
+        rep.lower()
+        if rep == 'p':
+            pioche_liste(jeu, pi)
+        if rep == 's':
+            num = int(input("Preciser numero de la carte a bouger: "))
+            if (saut_si_possible(jeu, num) == False):
+                      print("Regardez bien et recommencez")
+        
+        if(len(pi) == 0):
+            if(len(jeu) == nb_tas_max):
+                success = True
+            else:
+                print("VOUS AVEZ PERDU")
+                exit()
+        if rep == 'e':
+            print("VOUS AVEZ PERDU")
+            afficher_reussite(jeu)
+            pioche_un_a_un(pi)
+            exit()
+
+    print("VOUS AVEZ GAGNE")
+    exit()
+	\end{lstlisting}
+	
+	\begin{itemize}
+	\color{blue}\item[•]Aperçu du code lance\_reussite:
+	\end{itemize}
+	
+	\lstset{language=Python}
+	\lstset{frame=lines}
+	\lstset{label={lst:code_direct}}
+	\lstset{basicstyle=\footnotesize}
+	\begin{lstlisting}
+def lance_reussite(mode, nb_cartes=32, affiche=False,nb_tas_max=2):
+    pioche = init_pioche_fichier(f"jeu_{nb_cartes}.txt")
+    pioche = init_pioche_alea(pioche)
+
+    if(mode=="manuel"):
+        reussite_mode_manuel(pioche, nb_tas_max)
+    if(mode=="auto"):
+        reussite_mode_auto(pioche, affiche)	
+	\end{lstlisting}

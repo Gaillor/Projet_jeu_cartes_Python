@@ -1,0 +1,29 @@
+\babel@toc {french}{}\relax 
+\contentsline {section}{\numberline {1}Introduction}{2}{}%
+\contentsline {section}{\numberline {2}Règles du jeu}{2}{}%
+\contentsline {section}{\numberline {3}Partie guidée}{3}{}%
+\contentsline {subsection}{\numberline {3.1}Structure du programme}{3}{}%
+\contentsline {subsection}{\numberline {3.2}Partie affichage(affichage.py)}{3}{}%
+\contentsline {subsubsection}{\numberline {3.2.1}carte\_to\_chaine}{3}{}%
+\contentsline {subsubsection}{\numberline {3.2.2}afficher\_reussite}{4}{}%
+\contentsline {subsubsection}{\numberline {3.2.3}affiche\_liste}{4}{}%
+\contentsline {subsubsection}{\numberline {3.2.4}pioche\_un\_a\_un}{4}{}%
+\contentsline {subsection}{\numberline {3.3}Partie traitement fichier(traitement\_fichier.py)}{5}{}%
+\contentsline {subsubsection}{\numberline {3.3.1}init\_pioche\_fichier}{5}{}%
+\contentsline {subsubsection}{\numberline {3.3.2}ecrire\_fichier\_reussite}{6}{}%
+\contentsline {subsubsection}{\numberline {3.3.3}init\_pioche\_alea}{6}{}%
+\contentsline {subsection}{\numberline {3.4}Partie logique(logique.py)}{7}{}%
+\contentsline {subsubsection}{\numberline {3.4.1}alliance}{7}{}%
+\contentsline {subsubsection}{\numberline {3.4.2}saut\_si\_possible}{7}{}%
+\contentsline {subsubsection}{\numberline {3.4.3}une\_etape\_reussite}{8}{}%
+\contentsline {subsection}{\numberline {3.5}Partie jeu\_partie(jeu\_partie.py)}{9}{}%
+\contentsline {section}{\numberline {4}Partie Extensions}{10}{}%
+\contentsline {subsection}{\numberline {4.1}Partie logique(logique.py)}{10}{}%
+\contentsline {subsubsection}{\numberline {4.1.1}verifier\_pioche}{10}{}%
+\contentsline {subsubsection}{\numberline {4.1.2}pioche\_liste}{11}{}%
+\contentsline {subsection}{\numberline {4.2}Partie Statistiques(jeu\_stat.py)}{11}{}%
+\contentsline {subsubsection}{\numberline {4.2.1}res\_multi\_simulation}{11}{}%
+\contentsline {subsubsection}{\numberline {4.2.2}statistiques\_nb\_tas}{12}{}%
+\contentsline {subsection}{\numberline {4.3}Probabilité et graphe}{13}{}%
+\contentsline {subsubsection}{\numberline {4.3.1}stat\_reussite}{13}{}%
+\contentsline {subsubsection}{\numberline {4.3.2}stat\_tout\_nombre}{13}{}%

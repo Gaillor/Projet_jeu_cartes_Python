@@ -1,0 +1,61 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{xspace}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{graphicx}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\title{La réussite des alliances}
+\author{Amine Mohammed ROSTANE et Gaillor Jowardo JINORO}
+\date{02 Mai 2022}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+
+\hspace{\parindent} Le langage Python est le premier des langages informatiques les plus utilisés dans le monde en 2022. Dans le cadre de ce projet, nous créons un jeu de cartes appelé: "La réussite des alliances". L'objectif principal de ce projet est de mettre en pratique toutes les connaissances que nous avons acquises durant le premier semestre.Par ailleurs, ce travail a été réalisé en binôme durant lequel les échanges se sont faits par l'outil de travail à distance "GIT" qui  est un outil efficace pour pouvoir collaborer à distance et mieux gérer les versions de code que l'on a implémenté.
+\par Afin de voir plus clair dans ce qu'on a fait, nous divisons ce rapport en trois parties: tout d'abord, nous présenterons la généralité du jeu; ensuite, nous expliquerons nos implémentations des fonctions de la partie guidée du devoir; finalement, nous entamerons sur les extensions et les améliorations que nous avons apportées à ce sujet.
+
+
+\input{generalite.tex}
+\input{affichage.tex}
+\input{traitement\_fichier.tex}	
+\input{logique.tex}
+\input{jeu\_partie.tex}
+\input{extension1.tex}
+\input{extension2.tex}
+\input{extension3.tex}
+\input{affichage_GUI}
+
+\end{document}

@@ -1,0 +1,60 @@
+\subsection{Partie Statistiques(jeu\_stat.py)}
+\hspace{\parindent} Dans cette partie, on s'intéresse de plus en plus au nombre. On exploite les données via des simulations réalisées en mode automatique. Ces nombres pourront déterminer l'estimation de gagner une partie et de permettre plus loin, améliorer le jeu en imposant de plus en plus de difficultés ou encore, faciliter le jeu.
+Le fonctions ci-dessus sont chargées de ces tâches:
+\subsubsection{res\_multi\_simulation}
+	Elle se charge d'exécuter un nombre de simulations voulu et retourne à la fin une liste de nombres de tas à chaque fin de jeu.
+	\par \underline{Raisonnement}:
+	\begin{enumerate}
+	\item Créer la liste qui contiendra tous les nombres de tas de fin de jeu
+	\item Créer une autre liste qui contiendra autant de pioche que de simulation(car pour une simulation, on aura besoin d'une pioche):\textbf{c'est le rôle de la première boucle}
+	\item Ces pioches seront créées aléatoirement(\emph{init\_pioche\_alea()})
+	\item A chaque jeu, on prend une pioche et on joue en mode automatique:\textbf{dans la deuxième boucle} \\
+	\end{enumerate}
+	\begin{itemize}
+	\color{blue}\item[•]Aperçu du code:
+	\end{itemize}
+	
+	\lstset{language=Python}
+	\lstset{frame=lines}
+	\lstset{label={lst:code_direct}}
+	\lstset{basicstyle=\footnotesize}
+	\begin{lstlisting}
+def res_multi_simulation(nb_sim, nb_cartes=32):
+
+    melanges = []
+    res = []
+    
+    i = 0
+    while (i<nb_sim):
+        melanges.append(init_pioche_alea(nb_cartes))
+        i += 1
+        
+    i = 0
+    while (i<nb_sim):
+        res.append(len(reussite_mode_auto(melanges[i], False)))
+        i += 1
+        
+    return res
+	\end{lstlisting}	
+\subsubsection{statistiques\_nb\_tas}
+En exploitant le résultat fourni par la fonction \emph{res\_multi\_simulation}, celle-ci permet d'obtenir les données suivantes: \emph{le nombre moyen de tas}, \emph{le nombre minimum de tas} et \emph{le maximum} après toutes les simulation. Pour faciliter le travail, on a utilisé les fonctions prédéfinies du Python (\emph{min(), max(), mean()}).
+\par Ces tâches s'exécutent dans le code ci-dessus:
+	\\
+	\begin{itemize}
+	\color{blue}\item[•]Aperçu du code:
+	\end{itemize}
+	
+	\lstset{language=Python}
+	\lstset{frame=lines}
+	\lstset{label={lst:code_direct}}
+	\lstset{basicstyle=\footnotesize}
+	\begin{lstlisting}
+def statistiques_nb_tas(nb_sim, nb_cartes=32):
+    
+    jeu = res_multi_simulation(nb_sim, nb_cartes)
+
+    print("Apres ", nb_sim, " simulations on a :")
+    print("Le plus grand nombre de tas obtenu a la fin de la simulation : ", max(jeu))
+    print("Le plus petit nombre de tas obtenu a la fin de la simulation : ", min(jeu))
+    print("La moyenne des tas obtenu a la fin de la simulation : ", mean(jeu))
+	\end{lstlisting}	

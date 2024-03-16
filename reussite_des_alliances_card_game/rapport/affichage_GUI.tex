@@ -1,0 +1,489 @@
+\section{Interface graphique}
+    \subsection{affichage\_GUI.py}
+	dans affichage\_GUI.py on fait usage de Pygame qui est un module python basé sur SDL dédié au développement de jeux videos. Pygame permet de programmer les graphismes, les entrées clavier, le son et bien plus. Notre script affiche\_GUI.py contient 2 variables globales (screen, nun\_cartes et mode) et 6 fonctions qu'on détaillera dans les sous-sections suivantes.
+	
+	\subsubsection{get\_font}
+	fonction simple qui prend en argument un entier \emph{size} et accède a la police font.tff dans le repertoire assets puis la retourne avec la taille passée en argument en utilisant \emph{pygame.font}.
+	\\
+	\begin{itemize}
+	\color{blue}\item[•]Aperçu du code:
+	\end{itemize}
+	
+	\lstset{language=Python}
+	\lstset{frame=lines}
+	\lstset{label={lst:code_direct}}
+	\lstset{basicstyle=\footnotesize}
+	\begin{lstlisting}
+def get_font(size): 
+    return pygame.font.Font("assets/font.ttf", size)
+	\end{lstlisting}
+	
+	
+	
+	\subsubsection{main\_menu}
+	Cette fonction a son propre game loop permettant l'affichage du menu principale. Elle fait usage de la classe \textbf{Button} importé de \emph{button.py} qui facilite la création, l'affichage et la logique d'un bouton. Elle prends aussi en compte la valeur de la variable globale mode qui est soit \textbf{"manuel"} ou \textbf{"auto"}. Aprés initialisation de l'écran et l'affichage de l'arrière-plan, on crée 3 boutons: 
+	\begin{itemize}
+	    \item PLAY\_BUTTON qui fait appel a la fonction \textbf{\emph{partie(mode)}}.
+	    \item OPTIONS\_BUTTON qui fait appel a la fonction \emph{select\_nb\_cartes}.
+	    \item QUIT\_BUTTON qui tout simplement quitte l'application.
+	\end{itemize}
+	
+	\begin{itemize}
+	\color{blue}\item[•]Aperçu du code (Classe Button) :
+	\end{itemize}
+	
+	\lstset{language=Python}
+	\lstset{frame=lines}
+	\lstset{label={lst:code_direct}}
+	\lstset{basicstyle=\footnotesize}
+	\begin{lstlisting}
+class Button():
+	def __init__(self, image, pos, text_input, font, base_color, hovering_color):
+		self.image = image
+		self.x_pos = pos[0]
+		self.y_pos = pos[1]
+		self.font = font
+		self.base_color, self.hovering_color = base_color, hovering_color
+		self.text_input = text_input
+		self.text = self.font.render(self.text_input, True, self.base_color)
+		if self.image is None:
+			self.image = self.text
+		self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))
+		self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
+
+	def update(self, screen):
+		if self.image is not None:
+			screen.blit(self.image, self.rect)
+		screen.blit(self.text, self.text_rect)
+
+	def checkForInput(self, position):
+		if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
+			return True
+		return False
+
+	def changeColor(self, position):
+		if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
+			self.text = self.font.render(self.text_input, True, self.hovering_color)
+		else:
+			self.text = self.font.render(self.text_input, True, self.base_color)
+	\end{lstlisting}
+	
+	\begin{itemize}
+	\color{blue}\item[•]Aperçu du code (main\_menu) :
+	\end{itemize}
+	
+	\begin{lstlisting}
+	def main_menu():
+    global mode 
+
+    SCREEN = pygame.display.set_mode((1280, 720))
+    pygame.display.set_caption("Menu")
+
+    BG = pygame.image.load("assets/Background.png")
+    while True:
+        SCREEN.blit(BG, (0, 0))
+
+        MENU_MOUSE_POS = pygame.mouse.get_pos()
+
+        #MENU_TEXT = get_font(50).render("REUSSITE DES ALLIANCES", True, "#b68f40")
+        #MENU_RECT = MENU_TEXT.get_rect(center=(640, 100))
+
+        PLAY_BUTTON = Button(image=pygame.image.load("assets/Play Rect.png"), pos=(640, 300), #250
+                            text_input="JOUER", font=get_font(40), base_color="#d7fcd4", hovering_color="White")
+        OPTIONS_BUTTON = Button(image=pygame.image.load("assets/Options Rect.png"), pos=(640, 450), 
+                            text_input="OPTIONS", font=get_font(40), base_color="#d7fcd4", hovering_color="White")
+        QUIT_BUTTON = Button(image=pygame.image.load("assets/Quit Rect.png"), pos=(640, 600), 
+                            text_input="QUITTER", font=get_font(40), base_color="#d7fcd4", hovering_color="White")
+
+        #SCREEN.blit(MENU_TEXT, MENU_RECT)
+
+        for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
+            button.changeColor(MENU_MOUSE_POS)
+            button.update(SCREEN)
+
+        pygame.display.update()
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    partie(mode)
+                if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    select_nb_cartes()
+                if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    pygame.quit()
+                    sys.exit()
+	\end{lstlisting}
+	
+	\subsubsection{select\_nb\_cartes \& select\_mode}
+	Ces deux fonctions constituent le menu des options du jeu, elles permettent de choisir le nombre de cartes (32 ou 52) et le mode de jeu (manuel ou auto) qui affectent directement les variables globales \textbf{num\_cartes} et \textbf{mode} respectivement.\\
+	\emph{select\_nb\_cartes} fait appel a \emph{select\_mode} qui a son tour fait appel a \emph{main\_menu} pour commencer la partie avec les options choisies ou quitter le jeu.
+	\\
+	\begin{itemize}
+	\color{blue}\item[•]Aperçu du code (select\_nb\_cartes) :
+	\end{itemize}
+	\begin{lstlisting}
+	def select_nb_cartes():
+    global num_cartes
+    while True:
+        select_mouse_pos = pygame.mouse.get_pos()
+
+        screen.fill("black")
+
+        OPTIONS_TEXT = get_font(45).render("Nombre de cartes?", True, "White")
+        OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(640, 260))
+        screen.blit(OPTIONS_TEXT, OPTIONS_RECT)
+
+        OPTIONS_32 = Button(image=None, pos=(320, 460), 
+                            text_input="32", font=get_font(75), base_color="White", hovering_color="Green")
+
+        OPTIONS_52 = Button(image=None, pos=(960, 460), 
+                            text_input="52", font=get_font(75), base_color="White", hovering_color="Green")
+
+        OPTIONS_32.changeColor(select_mouse_pos)
+        OPTIONS_52.changeColor(select_mouse_pos)
+
+        OPTIONS_32.update(screen)
+        OPTIONS_52.update(screen)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if OPTIONS_32.checkForInput(select_mouse_pos):
+                    num_cartes = 32
+                    select_mode()
+                if OPTIONS_52.checkForInput(select_mouse_pos):
+                    num_cartes = 52
+                    select_mode()
+
+        pygame.display.update()
+	\end{lstlisting}
+	
+	\begin{itemize}
+	\color{blue}\item[•]Aperçu du code (select\_mode) :
+	\end{itemize}
+	\begin{lstlisting}
+	def select_mode():
+    global mode
+    while True:
+        select_mouse_pos = pygame.mouse.get_pos()
+
+        screen.fill("black")
+
+        OPTIONS_TEXT = get_font(45).render("Mode de jeu?", True, "White")
+        OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(640, 260))
+        screen.blit(OPTIONS_TEXT, OPTIONS_RECT)
+
+        OPTIONS_MANUEL = Button(image=None, pos=(320, 460), 
+                            text_input="manuel", font=get_font(75), base_color="White", hovering_color="Green")
+
+        OPTIONS_AUTO = Button(image=None, pos=(960, 460), 
+                            text_input="auto", font=get_font(75), base_color="White", hovering_color="Green")
+
+        OPTIONS_MANUEL.changeColor(select_mouse_pos)
+        OPTIONS_AUTO.changeColor(select_mouse_pos)
+        OPTIONS_MANUEL.update(screen)
+        OPTIONS_AUTO.update(screen)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if OPTIONS_MANUEL.checkForInput(select_mouse_pos):
+                    mode = 'manuel'
+                    main_menu()
+                if OPTIONS_AUTO.checkForInput(select_mouse_pos):
+                    mode = 'auto'
+                    main_menu()
+        pygame.display.update()
+	\end{lstlisting}
+	
+	\subsubsection{init\_liste\_card\_pos}
+	Cette fonction fait usage de la classe Game et Carte. Elle crée une liste de dictionnaires de cartes selon la valeur de la variable globale \textbf{\emph{num\_cartes}} de forme \textbf{\emph{\{'couleur': x, 'valeur': y\}}}, initialise un objet Carte avec la valeur, couleur et position adéquate et l'ajoute a une nouvelle clé dans le dictionnaire nommée \textbf{\emph{'carte'}}
+	\\
+	\begin{itemize}
+	\color{blue}\item[•]Aperçu du code (game.py) :
+	\end{itemize}
+	
+	\begin{lstlisting}
+import pygame
+from traitement_fichier import *
+
+
+class Game:
+
+    def __init__(self, mode) -> None:
+        self.mode = mode
+        #self.card_infos = init_pioche_fichier(f"jeu_{mode}.txt")
+        self.card_infos = init_pioche_alea(mode)
+	\end{lstlisting}
+
+	\begin{itemize}
+	\color{blue}\item[•]Aperçu du code (cartes.py) :
+	\end{itemize}
+	
+	\begin{lstlisting}
+import pygame
+import game
+from random import shuffle
+from pioche import Pioche
+
+class Carte(Pioche):
+
+    def __init__(self, value, color, pos_x, pos_y) -> None:
+        super().__init__()
+        self.color = color
+        self.value = value
+        self.image = pygame.image.load(f"assets1/cartes/carte-{value}-{color}.png")
+        self.image = pygame.transform.scale(self.image,(72,96))
+        self.rect = self.image.get_rect()
+        self.rect.x = 15
+        self.rect.y = 15
+        self.pos_x = pos_x
+        self.pos_y = pos_y
+        self.origin_image = self.image #une copie de l'image originale
+        self.angle = 0
+        self.velocity = 3
+        self.clicked = False
+        self.Isvisible = True
+    
+    def set_pos(self, x, y, pos_x, pos_y):
+        self.x = x 
+        self.y = y
+        self.pos_x = pos_x
+        self.pos_y = pos_y
+
+    def rotate(self):
+        self.angle += 5
+        self.image = pygame.transform.rotozoom(self.origin_image, self.angle, 1)
+        self.rect =self.image.get_rect(center = self.rect.center)
+
+
+    def moveMouse(self):
+        positionMouse = pygame.mouse.get_pos()  #position de la souris
+        
+
+    def move(self):
+        if(self.rect.x < self.pos_x):
+            self.rect.x += self.velocity
+        if(self.rect.y < self.pos_y):
+            self.rect.y += self.velocity
+
+
+    def set_visible(self, bVisible):
+        if bVisible == False:
+            self.image = pygame.image.load("assets1/cartes/carte-dos-dos.png")
+            self.image = pygame.transform.scale(self.image,(72,96))
+
+	\end{lstlisting}
+
+	\begin{itemize}
+	\color{blue}\item[•]Aperçu du code (init\_liste\_card\_pos) :
+	\end{itemize}
+	
+	\begin{lstlisting}
+	def init_liste_card_pos(pos_X = 15, pos_Y = 200): #au départ la 1ere carte est en bas de la pioche
+    
+    global num_cartes
+    game = Game(num_cartes)
+
+    dic_cartes = game.card_infos.copy()
+    i, j = 0, 0
+    while(i < len(game.card_infos)):
+
+        if (pos_X + 72) < (screen.get_width()-87): #87 = bordure fin + une carte
+            pos_X = 15+90*j
+            carte = Carte(game.card_infos[i]['valeur'],game.card_infos[i]['couleur'],pos_X, pos_Y)
+            #liste_card.append(carte)
+            dic_cartes[i]['carte'] = carte
+            j += 1
+        
+        else:
+            pos_X = 15
+            pos_Y += 115
+            j = 0
+            i -= 1
+        i +=1
+    
+    return dic_cartes
+	\end{lstlisting}
+	
+	\subsubsection{partie}
+	Cette fonction constitue le jeu principal, elle fait usage de la classe \textbf{\emph{Pioche}} qui stocke et affiche toutes les cartes du jeu. On initialise au préalable l'arriere-plan, une liste vide \emph{jeu} qui sera utilisé pour capturer les cartes visibles sur l'écran, la liste de dictionnaires \emph{list\_pioche\_pos} qui contient toutes les cartes de la pioche (non visibles au joueur) et l'entier \emph{win\_len} qui fait appel a la fonction de simulation \emph{réussite\_mode\_auto} sur la pioche actuelle et capture la longeur de la liste retournée, c'est a dire, le nombre de cartes restantes si la partie avait été jouée parfaitement.\\
+	\textbf{en mode auto}, on simule un clique sur la pioche a chaque répétition de la boucle, puis un clique sur chaque carte visible de gauche a droite en ignorant la première et la dernière carte, si \emph{saut\_si\_possible} retourne \emph{True} on fait le saut et on sort de la boucle pour y rerentrer dans la prochaine répétition.\\
+	\textbf{en mode manuel}, c'est la même logique sauf que les cliques se font par l'utilisateur, la booléenne \emph{clicked} des objets \emph{Carte} permet de déterminer si une carte est cliquée ou pas.\\
+	On ajoute aussi un boutton \emph{retour} en utilisant la classe \emph{Button}, qui permet de revenir au menu principal tout en réinitialisant le jeu.
+	\\
+	\begin{itemize}
+	\color{blue}\item[•]Aperçu du code (pioche.py) :
+	\end{itemize}
+	
+	\begin{lstlisting}
+import pygame
+
+class Pioche(pygame.sprite.Sprite):
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.image = pygame.image.load(f"assets1/cartes/carte-dos-dos.png")
+        self.image = pygame.transform.scale(self.image,(72,96))
+        self.imageFin = pygame.image.load(f"assets1/cartes/carte-fin-fin.png")
+        self.imageFin = pygame.transform.scale(self.imageFin,(72,96))
+        self.rect = self.image.get_rect()
+        self.all_cards = pygame.sprite.Group()
+        self.clicked = False
+        self.rect.x = 15
+        self.rect.y = 15
+
+
+
+    def launch_card(self, carte):
+      #on prend une carte on le met à la position de la pioche
+        self.all_cards.add(carte)   #ajout dans le groupe de carte
+
+    def remove_card(self, carte):
+        self.all_cards.remove(carte)
+
+    def reset_pioche(self):
+        self.all_cards.empty()
+	\end{lstlisting}
+	
+	\begin{itemize}
+	\color{blue}\item[•]Aperçu du code (partie) :
+	\end{itemize}
+	
+	\begin{lstlisting}
+def partie(mode):
+    background = pygame.image.load('assets1/bg.jpg')
+    background = pygame.transform.scale(background,(2000,720))
+
+    jeu = [] # cartes visibles 
+    pioche = Pioche() 
+
+   #SOUND 
+    single = pygame.mixer.Sound(os.path.join('.', 'single.mp3'))
+    possible = pygame.mixer.Sound(os.path.join('.', 'possible.mp3'))
+    impossible = pygame.mixer.Sound(os.path.join('.', 'impossible.mp3'))
+
+    running = True
+    clock = pygame.time.Clock()
+    list_pioche_pos = init_liste_card_pos()
+    win_len = len(reussite_mode_auto(list_pioche_pos))
+
+
+    while running:
+        screen.blit(background, (0, 0))
+
+        if len(list_pioche_pos) != 0:
+            screen.blit(pioche.image, (pioche.rect.x,pioche.rect.y))
+
+        mouse_pos = pygame.mouse.get_pos()
+
+        if mode == 'auto':
+            pioche.clicked = True
+
+
+        
+        if pioche.clicked == True and len(list_pioche_pos)!=0:
+            if mode == 'manuel':
+                pygame.mixer.Sound.play(single)
+            pioche.launch_card(list_pioche_pos[0]["carte"])
+            jeu.append(list_pioche_pos[0])
+            del list_pioche_pos[0]
+        
+        pioche.clicked = False
+
+        if mode == 'manuel':
+            i=0
+            while (i<len(jeu)):
+                if jeu[i]["carte"].clicked == True:
+                    print(i)
+                    jeu_temp = list(jeu)
+                    if i == 0 or i == len(jeu_temp)-1:
+                        pygame.mixer.Sound.play(impossible)
+                        break
+                    else:
+                        if(saut_si_possible(jeu, i)):
+                            pygame.mixer.Sound.play(possible)
+                            pioche.remove_card(jeu_temp[i-1]["carte"])
+                            break
+                        else:
+                            pygame.mixer.Sound.play(impossible)
+                            break
+                i += 1
+
+
+        if mode == 'auto' and len(jeu)>win_len:
+            i=0
+            while (i<len(jeu)):
+                jeu_temp = list(jeu)
+                if len(jeu) == win_len:
+                    break
+                if i == 0 or i == len(jeu_temp)-1:
+                    print("impossible")
+                else:
+                    if(saut_si_possible(jeu, i)):
+                        pioche.remove_card(jeu_temp[i-1]["carte"])
+                        break
+                i+=1
+
+            
+
+        PLAY_BACK = Button(image=None, pos=(screen.get_width() - 87, screen.get_height()-80), 
+                            text_input="RETOUR", font=get_font(20), base_color="White", hovering_color="Green")
+
+        PLAY_BACK.changeColor(mouse_pos)
+        PLAY_BACK.update(screen)
+        
+        for carte in pioche.all_cards:
+            carte.clicked = False
+
+        for carte in pioche.all_cards:
+            carte.move()
+
+        pioche.all_cards.draw(screen)  
+
+
+        pygame.display.flip()
+
+    # _______________________EVENTS__________________________#
+
+        
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+                pygame.quit()
+                sys.exit()
+        
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if pioche.rect.collidepoint(event.pos):
+                    if pygame.mouse.get_pressed()[0] == 1:
+                        pioche.clicked = True
+
+                    elif pygame.mouse.get_pressed()[0] == 0:
+                        pioche.clicked = False
+
+                for card in pioche.all_cards:
+                    if card.rect.collidepoint(event.pos):
+                        if pygame.mouse.get_pressed()[0] == 1:
+                            card.clicked = True
+
+                    elif pygame.mouse.get_pressed()[0] == 0:
+                        card.clicked = False
+
+                if PLAY_BACK.checkForInput(mouse_pos):
+                    pioche.reset_pioche()
+                    main_menu()
+
+    clock.tick(70)
+	\end{lstlisting}
+	
+	\subsection{GIT \& Groupe}
+	\noindent Lien vers le depot GIT:  \href{https://gitlab.isima.fr/gjjinoro/projet_python_s2}{https://gitlab.isima.fr/gjjinoro/projet\_python\_s2} \\
+	GROUPE : \textbf{MI25-BIN16}

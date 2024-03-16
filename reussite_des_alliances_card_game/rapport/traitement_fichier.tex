@@ -1,0 +1,86 @@
+	\subsection{Partie traitement fichier(traitement\_fichier.py)}
+	Cette partie concerne toutes les fonctions permettant de manipuler les fichiers, c'est-à-dire que ce soit écrire ou récupérer des éléments dans un fichier.
+\par Nous avons trois fonctions qui se chargent de cette tâche.
+	\subsubsection{init\_pioche\_fichier}
+	La fonction prend en argument un nom de fichier \textbf{.txt} contenant les couples \emph{valeur-couleur} des cartes séparés par des espaces; par exemple, dans le fichier texte, on a: 7-K 8-C 10-T \ldots Le but de cette fonction est d'exploiter ces données afin d'en créer des cartes, c'est-à-dire des dictionnaires de \emph{valeur} et \emph{couleur}. Ces dictionnaires seront ensuite contenus dans une liste que l'on retournera à la fin.
+	\par Dans la fonction, on a créé une liste vide(\emph{main\_lst}) que l'on remplira de dictionnaires(cartes). Avant tout, on vérifie que le fichier n'est pas vide par la fonction \textbf{os.stat()} avant d'ouvrir le ficher.Ensuite, on procède à la lecture tout en séparant la chaîne des caractères au niveau des espaces(\textbf{.split(" ")}) et en supprimant le retour à la ligne final(\textbf{.strip()}); ce procédé retournera une liste des caractères cassés que l'on a stocké dans \textbf{lst\_crt}.
+	\par Maintenant, on parcourt tous les éléments de \emph{lst\_crt} et pour chaque élément on le casse au niveau du "\textbf{-}"; on stocke le résultat dans une liste temporaire \emph{crt} qui contiendra juste deux éléments: le caractère lié à la valeur de la carte et le caractère de sa couleur. Après, on stocke ces deux élément dans un dictionnaire qui représentera la carte; le premier élément comme étant sa valeur(converti en \textbf{int}) et le deuxième, sa couleur. Une fois la carte créée, on la stocke dans la liste principale créée au tout début(\emph{main\_lst}). Après avoir parcouru toute la liste, on retourne enfin la liste principale.
+	\\
+	\begin{itemize}
+	\color{blue}\item[•]Aperçu du code:
+	\end{itemize}
+	
+	\lstset{language=Python}
+	\lstset{frame=lines}
+	\lstset{label={lst:code_direct}}
+	\lstset{basicstyle=\footnotesize}
+	\begin{lstlisting}
+def init_pioche_fichier(nom_fic):
+    main_lst = []
+
+    if (os.stat(nom_fic).st_size != 0):
+        f = open(nom_fic, "r") 
+        lst_crt = f.read().strip().split(" ")
+
+        for carte in lst_crt:
+            crt = carte.split("-")
+            crt_dct = {}
+            
+            if crt[0].isnumeric():
+                crt_dct['valeur'] = int(crt[0])
+            else:
+                crt_dct['valeur'] = crt[0]
+
+            crt_dct['couleur'] = crt[1]
+            main_lst.append(crt_dct)
+
+        f.close()
+    return main_lst		
+
+	\end{lstlisting} 
+	
+	\subsubsection{ecrire\_fichier\_reussite}
+	Cette fonction écrit dans un fichier. C'est totalement le contraire de la fonction init\_pioche\_fichier.
+	\\
+	\begin{itemize}
+	\color{blue}\item[•]Aperçu du code:
+	\end{itemize}
+	
+	\lstset{language=Python}
+	\lstset{frame=lines}
+	\lstset{label={lst:code_direct}}
+	\lstset{basicstyle=\footnotesize}
+	\begin{lstlisting}
+def ecrire_fichier_reussite(nom_fic, pioche):
+    f = open(nom_fic, 'w')
+
+    for carte in pioche:
+        f.write(f"{carte['valeur']}-{carte['couleur']} ")
+
+    f.close()	
+
+	\end{lstlisting}
+	
+	\subsubsection{init\_pioche\_alea}
+	Le but de cette fonction est de créer une pioche aléatoire, c'est-à-dire qu'on veut que l'agencement des cartes soit différent que celui écrit dans le fichier.
+	\par La fonction prend en argument un nombre de cartes par défaut égal à 32 (nb\_cartes); on crée une liste de cartes(\emph{jeu}) obtenu par le résultat de la fonction \emph{init\_pioche\_fichier} qui prend en argument un nom de fichier que l'on a écrit en format \textbf{f"jeu\_\{nb\_cartes\}.txt"} car lorsque le joueur décidera de jouer en 52 cartes, cela appelera direct le fichier \emph{jeu\_52.txt}.Ensuite, on vérifie que l'on a bien une liste de \emph{nb\_cartes} afin d'éviter des eventuelles erreurs. Après on mélange la liste aléatoirement par le biais de la fonction prédéfinie \textbf{suffle()} et on retourne la liste.
+	\\
+	\begin{itemize}
+	\color{blue}\item[•]Aperçu du code:
+	\end{itemize}
+	
+	\lstset{language=Python}
+	\lstset{frame=lines}
+	\lstset{label={lst:code_direct}}
+	\lstset{basicstyle=\footnotesize}
+	\begin{lstlisting}
+def init_pioche_alea(nb_cartes=32):
+    
+    jeu = init_pioche_fichier(f"jeu_{nb_cartes}.txt")
+    
+    if (len(jeu) == 32 or len(jeu) == 52):
+    
+        shuffle(jeu)
+        
+        return jeu
+	\end{lstlisting}

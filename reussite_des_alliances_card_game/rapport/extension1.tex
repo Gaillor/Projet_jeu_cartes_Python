@@ -1,0 +1,56 @@
+\section{Partie Extensions}
+\hspace{\parindent} Dans cette section, nous faisons face à notre créativité, c'est la partie qui a été la plus laborieuse dans ce projet; en effet, on a dû faire de nombreuses recherches pour faire certaines tâches(surtout au niveau de l'interface graphique). On a eu recours à la création des fonctions supplémentaires que nous avons estimé plus pertinentes vis-à-vis de certaines tâches.
+	\par Voyons donc tout ça de plus près:
+	\subsection{Partie logique(logique.py)}
+	\subsubsection{verifier\_pioche}
+	Cette fonction vérifie qu'une carte est présente en un seul exemplaire dans la pioche qui lui est passée en argument, c'est-à-dire qu'il n'y a pas de doublon ou encore, la carte est unique.
+	\par \underline{Notre raisonnement s'est fait comme suit}:
+	\begin{enumerate}
+	\item Parcourir chaque élément de la liste pioche
+	\item Comparer cet élément à tous les éléments de la même liste
+	\end{enumerate}
+	
+	\par Pour ce faire, on a utilisé \emph{2 boucles while}; la première permet de prendre un seul élément et l'autre boucle qui est imbriquée à l'intérieur de la première permet de parcourir tous les éléments en vérifiant en même tant si la carte est même que les autres.
+	\\
+	\begin{itemize}
+	\color{blue}\item[•]Aperçu du code:
+	\end{itemize}
+	
+	\lstset{language=Python}
+	\lstset{frame=lines}
+	\lstset{label={lst:code_direct}}
+	\lstset{basicstyle=\footnotesize}
+	\begin{lstlisting}
+def verifier_pioche(pioche, nb_cartes=32): #Verifie #l'existence de doublons
+    if len(pioche) == nb_cartes:
+        i = 0
+        doublon = False
+        while (i < len(pioche)):
+            j = 0
+            while (j < len(pioche)):
+                if (pioche[i] == pioche[j] and j != i):
+                    return False
+                j += 1
+            i += 1
+
+        return True
+    
+    return False
+	\end{lstlisting}
+	
+	\subsubsection{pioche\_liste}
+	C'est une petite fonction que nous avons créée et elle est très utile dans ce jeu: elle prend en argument deux listes, la pioche et celle du jeu(liste des cartes jouées). Sa fonction est de piocher une carte de la pioche en l'ajoutant au jeu tout en effaçant celle-ci de la pioche. Entre autre, on a jugé que cette fonction nous permettra de savoir quand est-ce qu'on ne peu plus piocher(parce qu'à un moment donné, la pioche sera vide).
+	\\
+	\begin{itemize}
+	\color{blue}\item[•]Aperçu du code:
+	\end{itemize}
+	
+	\lstset{language=Python}
+	\lstset{frame=lines}
+	\lstset{label={lst:code_direct}}
+	\lstset{basicstyle=\footnotesize}
+	\begin{lstlisting}
+def pioche_liste(jeu, pioche): # Fait une simple pioche
+    jeu.append(pioche[0])
+    pioche.pop(0)
+	\end{lstlisting}	

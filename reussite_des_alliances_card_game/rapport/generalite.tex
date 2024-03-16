@@ -1,0 +1,22 @@
+\section{Règles du jeu}
+
+\hspace{\parindent} Avant tout, on nous a imposé l'unanimité sur le codage des cartes; c'est-à-dire que dans toute la logique du programme, une carte est représentée par un \emph{dictionnaire} ayant \textbf{deux clés: "valeur"} et \textbf{"couleur"}. Les valeurs sont par exemple: 2,3,A,Q,\ldots et les couleurs sont:  T(trèfle),K(carreau),C(coeur),P(Pique).
+
+\par Par contre, on aimerait faire savoir dès le début qu'on a porté une légère modification à ce dictionnaire dans la partie "amélioration" histoire de se faciliter les tâches, lorsqu'on parlera de l'interface graphique. Désormais, voyons ci-dessous les règles du jeu et son déroulement:
+\\
+\begin{itemize}
+  \item Le jeu se joue avec 32 ou 52 cartes.
+  \item Après avoir choisi le nombre de cartes, il faut les battre.
+  \item On choisit le nombre maximal de tas(pile de cartes) final, c'est-à-dire que si l'on dépasse ce nombre, la partie est perdue sinon, on gagne.
+  \item Piocher une-à-une jusqu'à avoir au début 3 cartes que l'on pose de \textbf{gauche} à \textbf{droite}
+  \item On dit qu'il y a saut ou bien un saut est possible si 2 tas séparés d'un autre tas au milieu, ont les mêmes couleurs ou mêmes valeurs. Si c'est le cas, ce tas du milieu va s'empiler au-dessus de celui d'avant(c'est aussi simple que ça!)
+  \item S'il n'y a plus de saut possible on pioche une carte, on vérifie si un nouveau saut est possible et ainsi de suite,...
+  \item Le jeu se termine lorsqu'on a fini toute la pioche ou bien que l'on a abandonné
+  \item Le jeu est gagné si l'on a atteint le nombre maximal fixé au début ou encore moins(c'est mieux, et le coup parfait c'est de terminer avec 2 tas)
+  \item Si le joueur a abandonné, c'est une défaite directe \\
+\end{itemize}
+\par Nous venons donc de comprendre les règles du jeu. En se basant sur celles-ci, nous avons pu nous créer des idées sur nos implémentations des fonctions de la partie guidée que nous verrons dans la partie suivante.
+
+\section{Partie guidée}
+	\subsection{Structure du programme}
+En analysant les tâches que nous devons faire, on a constaté qu'il était plus bénéfique de diviser le travail en plusieurs modules, en terme de bonne pratique et de visualisation. En effet, nous avons catégorisé les fonctions par rapport aux résultats qu'elles donnent, nous avons les fichiers suivants:\textbf{affichage.py, jeu\_partie.py,logique.py, traitement\_fichier.py} et bien évidemment, le fichier \textbf{main.py} dans lequel on a importé tous ces modules afin de pouvoir jouer le jeu pleinement.

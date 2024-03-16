@@ -1,0 +1,94 @@
+\subsection{Partie logique(logique.py)}
+	Dans cette section, nous verrons toutes les fonctions qui permettent le fonctionnement du jeu ainsi que toutes ses règles.
+	\subsubsection{alliance}
+	Comme expliqué dans la règle du jeu, il y a alliance quand 2 cartes ont les même couleurs ou les même valeurs. Cette fonction vérifie alors cette condition et retourne un booléen \emph{vrai} ou \emph{faux}.
+	\\
+	\begin{itemize}
+	\color{blue}\item[•]Aperçu du code:
+	\end{itemize}
+	
+	\lstset{language=Python}
+	\lstset{frame=lines}
+	\lstset{label={lst:code_direct}}
+	\lstset{basicstyle=\footnotesize}
+	\begin{lstlisting}
+def alliance(carte1, carte2):
+    if (carte1['valeur'] == carte2['valeur'] or carte1['couleur'] == carte2['couleur']):
+        return True
+    return False
+	\end{lstlisting}
+	
+	\subsubsection{saut\_si\_possible}
+	On a ici deux arguments passés à la fonction, une liste de tas correspondant aux cartes visibles dans le jeu et un nombre qui représentera l'index d'une carte choisie dans la liste. Le but est de vérifier s'il y a alliance entre la carte d'avant celle présente à cet index et celle d'après car s'il y a alliance, c'est-à-dire qu'un saut est possible.
+	\par En effet, on vérifie tout d'abord que la liste a au moins 3 cartes car il faut impérativement qu'il y ait une carte au milieu; on vérifie aussi que l'index ne soit pas celui de la dernière carte ni de celui de la première.Il faut remarquer ici, on a ajouté 1 à l'indice de la carte pour obtenir le numéro de la carte dans le jeu car la logique nous dit qu'un joueur va désigner une carte par son numéro non pas par son indice.
+	\par Après, on accède à la carte d'avant en soustrayant à l'index courant de 2 puisqu'il a été décalé de 1 et à celle d'après en gardant l'index +1; une fois qu'on a les 2 cartes, il reste juste à vérifier s'il y a alliance entre ces cartes grâce à la fonction \emph{alliance}.Si c'est le cas, le saut est fait en effaçant juste la carte d'avant: cela veut dire que la carte du milieu s'est empilée sur le tas d'avant et on retourne "Vrai" sinon "Faux".
+	\\
+	\begin{itemize}
+	\color{blue}\item[•]Aperçu du code:
+	\end{itemize}
+	
+	\lstset{language=Python}
+	\lstset{frame=lines}
+	\lstset{label={lst:code_direct}}
+	\lstset{basicstyle=\footnotesize}
+	\begin{lstlisting}	
+def saut_si_possible(liste_tas, num_tas):
+	num_tas += 1	#on obtient le numero de la carte
+    if (len(liste_tas) >= 3 and num_tas < len(liste_tas) and num_tas > 0): #len - 1 car il 
+#ne peut pas etre en dernier (on compare les cartes d'avant et apres)
+
+        carte_avant = liste_tas[num_tas - 2]
+        carte_apres = liste_tas[num_tas]
+
+        if( alliance(carte_avant, carte_apres) ):
+            liste_tas.pop(num_tas - 1) #supprime la carte avant le tas passe en argument
+            return True
+
+    return False
+	\end{lstlisting}
+	
+	\subsubsection{une\_etape\_reussite}
+	Cette fonction est le coeur du jeu en mode automatique que l'on verra prochainement. Elle prend 3 arguments: une liste(\emph{liste\_tas}), une liste(\emph{pioche}) et un booléen(\emph{affiche}) valant par défaut "False".Le but ici,c'est de faire des éventuels saut après avoir piocher une carte de la pioche.
+	\par Pour ce faire, on prend le premier élément de la pioche ce qui correspond à la première carte de la pioche; on l'ajoute à la liste des cartes visibles de jeu.Tout de suite après, on l'efface de la pioche, on se sert de la fonction \emph{affiche\_liste()} pour afficher l'état du jeu après la pioche.
+	\par Après,  on vérifie s'il y a saut possible entre la carte qu'on vient de piocher(dernière carte) et celle d'avant-avant dernière carte; pour cela, on à utilisé la fonction \emph{saut\_si\_possible} en prenant l'index de l'avant-dernière carte. 
+	\par Si après la pioche, un saut a été fait, on vérifie si on peut encore faire d'autres sauts; alors, on a initialisé un compteur \textbf{i = 1} pour commencer directement à la deuxième carte du jeu et tant qu'il y a un saut possible on recommence à vérifier de la deuxième carte jusqu'à ce qu'il n'y en ait plus c'est-a-dire qu'en incrémentant \textbf{i += 1} on atteint la fin de la liste ou bien il ne reste plus que 2 tas.
+	\\
+	\begin{itemize}
+	\color{blue}\item[•]Aperçu du code:
+	\end{itemize}
+	
+	\lstset{language=Python}
+	\lstset{frame=lines}
+	\lstset{label={lst:code_direct}}
+	\lstset{basicstyle=\footnotesize}
+	\begin{lstlisting}	
+def une_etape_reussite(liste_tas, pioche, affiche=False):
+    carte_pioche = pioche[0]
+    liste_tas.append(carte_pioche)
+    pioche.pop(0)
+    affiche_liste(liste_tas, affiche)
+
+    if(saut_si_possible(liste_tas, len(liste_tas) - 2)): #On passe 
+    #l'index de l'avant derniere carte
+
+        i = 1 # On commence par la deuxieme carte
+
+        affiche_liste(liste_tas, affiche) 
+
+        while (i >= 1): # l'index de la carte passee en argument 
+        #sera toujours entre la deuxieme et l'avant derniere
+
+            if (saut_si_possible(liste_tas, i)):
+                i = 0 
+                affiche_liste(liste_tas, affiche)
+            if (i == len(liste_tas) - 1 or len(liste_tas) < 3): 
+            #derniere carte atteinte ou le jeu est gagne
+                break
+
+            i += 1 # Quand le saut n est pas possible on passe a 
+            #la prochaine carte
+                   # i est reinitialise a 0 plus haut, puis 
+                   #incremente de 1 a la fin pour revenir a la 
+                   #deuxieme
+                   # carte quand le saut est possible
+	\end{lstlisting}

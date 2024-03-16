@@ -1,0 +1,100 @@
+	\subsection{Partie affichage(affichage.py)}
+	Dans ce fichier, on a implémenté toutes les fonctions qui permettent d'afficher les cartes dans le terminal.
+
+	\subsubsection{carte\_to\_chaine}
+	Cette fonction prend en argument une carte, c'est-à-dire un dictionnaire avec les clés \emph{valeur} et \emph{couleur}. Ensuite, dans la fonction, nous nous servons d'un dictionnaire "symb" qui contient comme clé: \textbf{le caractère d'une couleur d'une carte}  et comme valeur: \textbf{le code ascii du symbole de cette couleur}.
+	\\
+	\par Cette fonction retourne la valeur de la carte passé en argument suivi de son symbole(sa couleur) en accédant à la valeur de la clé: \emph{valeur} de la carte et en convertissant le code ascii de sa couleur en caractère. En plus de cela, si la valeur est différent de 10, elle met un espace au début sinon, il n'y en a pas.
+	\\
+	\begin{itemize}
+	\color{blue}\item[•]Aperçu du code:
+	\end{itemize}
+	
+	\lstset{language=Python}
+	\lstset{frame=lines}
+	\lstset{label={lst:code_direct}}
+	\lstset{basicstyle=\footnotesize}
+	\begin{lstlisting}
+		
+def carte_to_chaine(carte):
+    symb = {'P': 9824,'C': 9825,'K': 9826, 'T': 9827}
+    esp = 0
+
+    if(carte['valeur'] != 10):
+        esp = 1
+    
+    
+    if(carte['couleur'] == 'P'):
+        result = " " * esp + f"{carte['valeur']}{chr(symb['P'])}"
+    if(carte['couleur'] == 'C'):
+        result = " " * esp + f"{carte['valeur']}{chr(symb['C'])}"
+    if(carte['couleur'] == 'K'):
+        result = " " * esp + f"{carte['valeur']}{chr(symb['K'])}"
+    if(carte['couleur'] == 'T'):
+        result = " " * esp + f"{carte['valeur']}{chr(symb['T'])}"
+    
+    
+    return result
+	\end{lstlisting}
+	
+	
+	\subsubsection{afficher\_reussite}
+	Celle-ci prend en argument une liste de cartes (liste de dictionnaires). Elle affiche toutes les cartes avec leurs symboles en se servant de la valeur de retour de la  fonction prédéfinie carte\_to\_chaine. Pour ce faire, on parcourt toute la liste et pour éviter toute erreur, on vérifie dès le début que la liste n'est pas vide. Après avoir tout afficher, on met un retour à la ligne.
+		\\
+	\begin{itemize}
+	\color{blue}\item[•]Aperçu du code:
+	\end{itemize}
+ 	
+ 	\lstset{language=Python}
+	\lstset{frame=lines}
+	\lstset{label={lst:code_direct}}
+	\lstset{basicstyle=\footnotesize}
+	\begin{lstlisting}
+def afficher_reussite(liste_carte):
+    if (liste_carte):
+        i = 0
+        while(i < len(liste_carte) - 1): 
+            print(carte_to_chaine(liste_carte[i])+ " ", end="")
+            i += 1
+
+        print(carte_to_chaine(liste_carte[i]), end="")
+    print("\n")		
+
+	\end{lstlisting}
+	\subsubsection{affiche\_liste}
+	Cette fonction permet juste d'avoir un choix d'afficher ou pas toutes les cartes d'une liste. En effet, elle prend deux arguments: \emph{la liste} et \emph{affiche} qui est un booléen. Si affiche est à "vrai", on affichera la liste en se servant de la fonction \emph{affiche\_reussite}.
+		\\
+	\begin{itemize}
+	\color{blue}\item[•]Aperçu du code:
+	\end{itemize}
+ 	
+ 	\lstset{language=Python}
+	\lstset{frame=lines}
+	\lstset{label={lst:code_direct}}
+	\lstset{basicstyle=\footnotesize}
+	\begin{lstlisting}
+def affiche_liste(liste_tas, affiche):
+    if (affiche == True):
+        afficher_reussite(liste_tas)
+	
+	\end{lstlisting}
+	\subsubsection{pioche\_un\_a\_un}
+	Cette fonction permet d'afficher un à un les cartes d'une liste passée en argument. Cette fonction servira à afficher les cartes piochées durant le jeu. En parcourant tous les éléments de la liste, on les passe un à un en argument de la fonction carte\_to\_chaine, afin d'obtenir leurs valeurs suivi de leurs symboles et de pouvoir les afficher.
+		\\
+	\begin{itemize}
+	\color{blue}\item[•]Aperçu du code:
+	\end{itemize}
+ 	
+ 	\lstset{language=Python}
+	\lstset{frame=lines}
+	\lstset{label={lst:code_direct}}
+	\lstset{basicstyle=\footnotesize}
+	\begin{lstlisting}
+def pioche_un_a_un(pioche):
+    i = 0
+
+    while (i < len(pioche)):
+        print(carte_to_chaine(pioche[i]), end='')
+        i += 1
+	
+	\end{lstlisting}
